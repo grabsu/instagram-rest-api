@@ -1,0 +1,10 @@
+services:
+  instagram-rest-api:
+    container_name: instagram-rest-api
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app

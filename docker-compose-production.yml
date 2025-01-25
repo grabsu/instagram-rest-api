@@ -1,0 +1,10 @@
+services:
+
+    instagram-rest-api:
+        container_name: instagram-rest-api
+        image: grabsu/instagram-rest-api:1.0.0
+        restart: always
+        ports:
+          - "8000:8000"
+        volumes:
+            - ./db.json:/app/db.json
