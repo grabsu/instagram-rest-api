@@ -26,11 +26,15 @@ async def photo_upload_to_story(sessionid: str = Form(...),
                                 file: UploadFile = File(...),
                                 as_video: Optional[bool] = Form(False),
                                 caption: Optional[str] = Form(""),
-                                mentions: Optional[List[StoryMention]] = Form([]),
-                                locations: Optional[List[StoryLocation]] = Form([]),
+                                mentions: Optional[List[StoryMention]] = Form(
+                                    []),
+                                locations: Optional[List[StoryLocation]] = Form(
+                                    []),
                                 links: Optional[List[StoryLink]] = Form([]),
-                                hashtags: Optional[List[StoryHashtag]] = Form([]),
-                                stickers: Optional[List[StorySticker]] = Form([]),
+                                hashtags: Optional[List[StoryHashtag]] = Form(
+                                    []),
+                                stickers: Optional[List[StorySticker]] = Form(
+                                    []),
                                 clients: ClientStorage = Depends(get_clients)
                                 ) -> Story:
     """Upload photo to story
@@ -57,16 +61,22 @@ async def photo_upload_to_story(sessionid: str = Form(...),
 
 @router.post("/upload_to_story/by_url", response_model=Story)
 async def photo_upload_to_story_by_url(sessionid: str = Form(...),
-                                url: AnyHttpUrl = Form(...),
-                                as_video: Optional[bool] = Form(False),
-                                caption: Optional[str] = Form(""),
-                                mentions: Optional[List[StoryMention]] = Form([]),
-                                locations: Optional[List[StoryLocation]] = Form([]),
-                                links: Optional[List[StoryLink]] = Form([]),
-                                hashtags: Optional[List[StoryHashtag]] = Form([]),
-                                stickers: Optional[List[StorySticker]] = Form([]),
-                                clients: ClientStorage = Depends(get_clients)
-                                ) -> Story:
+                                       url: AnyHttpUrl = Form(...),
+                                       as_video: Optional[bool] = Form(False),
+                                       caption: Optional[str] = Form(""),
+                                       mentions: Optional[List[StoryMention]] = Form(
+                                           []),
+                                       locations: Optional[List[StoryLocation]] = Form(
+                                           []),
+                                       links: Optional[List[StoryLink]] = Form(
+                                           []),
+                                       hashtags: Optional[List[StoryHashtag]] = Form(
+                                           []),
+                                       stickers: Optional[List[StorySticker]] = Form(
+                                           []),
+                                       clients: ClientStorage = Depends(
+                                           get_clients)
+                                       ) -> Story:
     """Upload photo to story by URL to file
     """
     cl = clients.get(sessionid)
@@ -89,7 +99,6 @@ async def photo_upload_to_story_by_url(sessionid: str = Form(...),
             stickers=stickers)
 
 
-
 @router.post("/download")
 async def photo_download(sessionid: str = Form(...),
                          media_pk: int = Form(...),
@@ -108,11 +117,11 @@ async def photo_download(sessionid: str = Form(...),
 
 @router.post("/download/by_url")
 async def photo_download_by_url(sessionid: str = Form(...),
-                         url: str = Form(...),
-                         filename: Optional[str] = Form(""),
-                         folder: Optional[Path] = Form(""),
-                         returnFile: Optional[bool] = Form(True),
-                         clients: ClientStorage = Depends(get_clients)):
+                                url: str = Form(...),
+                                filename: Optional[str] = Form(""),
+                                folder: Optional[Path] = Form(""),
+                                returnFile: Optional[bool] = Form(True),
+                                clients: ClientStorage = Depends(get_clients)):
     """Download photo using URL
     """
     cl = clients.get(sessionid)
@@ -135,12 +144,16 @@ async def photo_upload(sessionid: str = Form(...),
     """Upload photo and configure to feed
     """
     cl = clients.get(sessionid)
-    
+
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-    
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     content = await file.read()
     return await photo_upload_post(
         cl, content, caption=caption,
@@ -148,24 +161,29 @@ async def photo_upload(sessionid: str = Form(...),
         usertags=usernames_tags,
         location=location)
 
+
 @router.post("/upload/by_url", response_model=Media)
-async def photo_upload(sessionid: str = Form(...),
-                       url: AnyHttpUrl = Form(...),
-                       caption: str = Form(...),
-                       upload_id: Optional[str] = Form(""),
-                       usertags: Optional[List[str]] = Form([]),
-                       location: Optional[Location] = Form(None),
-                       clients: ClientStorage = Depends(get_clients)
-                       ) -> Media:
+async def photo_upload_by_url(sessionid: str = Form(...),
+                              url: AnyHttpUrl = Form(...),
+                              caption: str = Form(...),
+                              upload_id: Optional[str] = Form(""),
+                              usertags: Optional[List[str]] = Form([]),
+                              location: Optional[Location] = Form(None),
+                              clients: ClientStorage = Depends(get_clients)
+                              ) -> Media:
     """Upload photo and configure to feed
     """
     cl = clients.get(sessionid)
-    
+
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-        
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     content = requests.get(url).content
     return await photo_upload_post(
         cl, content, caption=caption,

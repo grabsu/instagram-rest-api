@@ -15,9 +15,11 @@ router = APIRouter(
     responses={404: {"description": "Not found"}}
 )
 
+
 class PaginatedMediaResponse(BaseModel):
     items: List[Media]
     end_cursor: Optional[str]
+
 
 @router.get("/id")
 async def media_id(media_pk: int) -> str:
@@ -71,10 +73,10 @@ async def user_medias(sessionid: str = Form(...),
 
 @router.post("/user_medias_paginated", response_model=PaginatedMediaResponse)
 async def user_medias_paginated(sessionid: str = Form(...),
-                      user_id: int = Form(...),
-                      amount: Optional[int] = Form(50),
-                      end_cursor: Optional[str] = Form(""),
-                      clients: ClientStorage = Depends(get_clients)) -> PaginatedMediaResponse:
+                                user_id: int = Form(...),
+                                amount: Optional[int] = Form(50),
+                                end_cursor: Optional[str] = Form(""),
+                                clients: ClientStorage = Depends(get_clients)) -> PaginatedMediaResponse:
     """Get a user's media (paginated)
     """
     cl = clients.get(sessionid)
@@ -84,21 +86,22 @@ async def user_medias_paginated(sessionid: str = Form(...),
 
 @router.post("/user_medias_gql", response_model=List[Media])
 async def user_medias_gql(sessionid: str = Form(...),
-                      user_id: int = Form(...),
-                      amount: Optional[int] = Form(50),
-                      clients: ClientStorage = Depends(get_clients)) -> List[Media]:
+                          user_id: int = Form(...),
+                          amount: Optional[int] = Form(50),
+                          clients: ClientStorage = Depends(get_clients)) -> List[Media]:
     """Get a user's media (gql)
     """
     cl = clients.get(sessionid)
     return cl.user_medias_gql(user_id, amount)
 
 
-@router.post("/user_medias_paginated_gql", response_model=Tuple[List[Media], str])
+@router.post("/user_medias_paginated_gql",
+             response_model=Tuple[List[Media], str])
 async def user_medias_paginated_gql(sessionid: str = Form(...),
-                      user_id: int = Form(...),
-                      amount: Optional[int] = Form(50),
-                      end_cursor: Optional[str] = Form(...),
-                      clients: ClientStorage = Depends(get_clients)) -> Tuple[List[Media], str]:
+                                    user_id: int = Form(...),
+                                    amount: Optional[int] = Form(50),
+                                    end_cursor: Optional[str] = Form(...),
+                                    clients: ClientStorage = Depends(get_clients)) -> Tuple[List[Media], str]:
     """Get a user's media (paginated gql)
     """
     cl = clients.get(sessionid)
@@ -107,9 +110,9 @@ async def user_medias_paginated_gql(sessionid: str = Form(...),
 
 @router.post("/user_medias_v1", response_model=List[Media])
 async def user_medias_v1(sessionid: str = Form(...),
-                      user_id: int = Form(...),
-                      amount: Optional[int] = Form(50),
-                      clients: ClientStorage = Depends(get_clients)) -> List[Media]:
+                         user_id: int = Form(...),
+                         amount: Optional[int] = Form(50),
+                         clients: ClientStorage = Depends(get_clients)) -> List[Media]:
     """Get a user's media (v1)
     """
     cl = clients.get(sessionid)
@@ -118,10 +121,10 @@ async def user_medias_v1(sessionid: str = Form(...),
 
 @router.post("/user_medias_paginated_v1", response_model=List[Media])
 async def user_medias_paginated_v1(sessionid: str = Form(...),
-                      user_id: int = Form(...),
-                      amount: Optional[int] = Form(50),
-                      end_cursor: Optional[str] = Form(...),
-                      clients: ClientStorage = Depends(get_clients)) -> tuple[list[Media], str]:
+                                   user_id: int = Form(...),
+                                   amount: Optional[int] = Form(50),
+                                   end_cursor: Optional[str] = Form(...),
+                                   clients: ClientStorage = Depends(get_clients)) -> tuple[list[Media], str]:
     """Get a user's media (paginated v1)
     """
     cl = clients.get(sessionid)
@@ -175,8 +178,8 @@ async def media_user(sessionid: str = Form(...),
 
 @router.post("/oembed", response_model=Dict)
 async def media_oembed(sessionid: str = Form(...),
-                     url: str = Form(...),
-                     clients: ClientStorage = Depends(get_clients)) -> Dict:
+                       url: str = Form(...),
+                       clients: ClientStorage = Depends(get_clients)) -> Dict:
     """Return info about media and user from post URL
     """
     cl = clients.get(sessionid)
@@ -217,8 +220,8 @@ async def media_seen(sessionid: str = Form(...),
 
 @router.post("/likers", response_model=List[UserShort])
 async def media_likers(sessionid: str = Form(...),
-                     media_id: str = Form(...),
-                     clients: ClientStorage = Depends(get_clients)) -> List[UserShort]:
+                       media_id: str = Form(...),
+                       clients: ClientStorage = Depends(get_clients)) -> List[UserShort]:
     """Get user's likers
     """
     cl = clients.get(sessionid)
@@ -227,9 +230,9 @@ async def media_likers(sessionid: str = Form(...),
 
 @router.post("/archive", response_model=bool)
 async def media_archive(sessionid: str = Form(...),
-                     media_id: str = Form(...),
-                     revert: Optional[bool] = Form(False),
-                     clients: ClientStorage = Depends(get_clients)) -> bool:
+                        media_id: str = Form(...),
+                        revert: Optional[bool] = Form(False),
+                        clients: ClientStorage = Depends(get_clients)) -> bool:
     """Archive a media
     """
     cl = clients.get(sessionid)
@@ -238,8 +241,8 @@ async def media_archive(sessionid: str = Form(...),
 
 @router.post("/unarchive", response_model=bool)
 async def media_unarchive(sessionid: str = Form(...),
-                     media_id: str = Form(...),
-                     clients: ClientStorage = Depends(get_clients)) -> bool:
+                          media_id: str = Form(...),
+                          clients: ClientStorage = Depends(get_clients)) -> bool:
     """Unarchive a media
     """
     cl = clients.get(sessionid)

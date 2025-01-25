@@ -23,6 +23,15 @@ docker-build:
 	docker compose build --pull
 
 
+#LINT
+lint:
+	docker compose run instagram-rest-api flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+	docker compose run instagram-rest-api flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+lint-fix:
+	docker compose run instagram-rest-api autopep8 --in-place --aggressive --recursive .
+
+
 #TESTS
 test:
 	docker compose run instagram-rest-api pytest tests/tests.py

@@ -56,7 +56,8 @@ async def video_upload_to_story_by_url(sessionid: str = Form(...),
                                        links: List[StoryLink] = [],
                                        hashtags: List[StoryHashtag] = [],
                                        stickers: List[StorySticker] = [],
-                                       clients: ClientStorage = Depends(get_clients)
+                                       clients: ClientStorage = Depends(
+                                           get_clients)
                                        ) -> Story:
     """Upload video to story by URL to file
     """
@@ -90,11 +91,11 @@ async def video_download(sessionid: str = Form(...),
 
 @router.post("/download/by_url")
 async def video_download_by_url(sessionid: str = Form(...),
-                         url: str = Form(...),
-                         filename: Optional[str] = Form(""),
-                         folder: Optional[Path] = Form(""),
-                         returnFile: Optional[bool] = Form(True),
-                         clients: ClientStorage = Depends(get_clients)):
+                                url: str = Form(...),
+                                filename: Optional[str] = Form(""),
+                                folder: Optional[Path] = Form(""),
+                                returnFile: Optional[bool] = Form(True),
+                                clients: ClientStorage = Depends(get_clients)):
     """Download video using URL
     """
     cl = clients.get(sessionid)
@@ -121,8 +122,12 @@ async def video_upload(sessionid: str = Form(...),
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-    
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     content = await file.read()
     if thumbnail is not None:
         thumb = await thumbnail.read()
@@ -136,24 +141,29 @@ async def video_upload(sessionid: str = Form(...),
         usertags=usernames_tags,
         location=location)
 
+
 @router.post("/upload/by_url", response_model=Media)
-async def video_upload(sessionid: str = Form(...),
-                       url: str = Form(...),
-                       caption: str = Form(...),
-                       thumbnail: Optional[UploadFile] = File(None),
-                       usertags: Optional[List[str]] = Form([]),
-                       location: Optional[Location] = Form(None),
-                       clients: ClientStorage = Depends(get_clients)
-                       ) -> Media:
+async def video_upload_by_url(sessionid: str = Form(...),
+                              url: str = Form(...),
+                              caption: str = Form(...),
+                              thumbnail: Optional[UploadFile] = File(None),
+                              usertags: Optional[List[str]] = Form([]),
+                              location: Optional[Location] = Form(None),
+                              clients: ClientStorage = Depends(get_clients)
+                              ) -> Media:
     """Upload photo by URL and configure to feed
     """
     cl = clients.get(sessionid)
-    
+
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-    
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     content = requests.get(url).content
     if thumbnail is not None:
         thumb = await thumbnail.read()

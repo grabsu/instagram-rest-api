@@ -3,6 +3,7 @@ from instagrapi import Client
 from tinydb import TinyDB, Query
 import json
 
+
 class ClientStorage:
     db = TinyDB('./db.json')
 
@@ -27,7 +28,8 @@ class ClientStorage:
             cl.get_timeline_feed()
             return cl
         except IndexError:
-            raise Exception('Session not found (e.g. after reload process), please relogin')
+            raise Exception(
+                'Session not found (e.g. after reload process), please relogin')
 
     def set(self, cl: Client) -> bool:
         """Set client settings

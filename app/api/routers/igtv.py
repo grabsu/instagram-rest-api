@@ -18,10 +18,10 @@ router = APIRouter(
 
 @router.post("/download")
 async def igtv_download(sessionid: str = Form(...),
-                         media_pk: int = Form(...),
-                         folder: Optional[Path] = Form(""),
-                         returnFile: Optional[bool] = Form(True),
-                         clients: ClientStorage = Depends(get_clients)):
+                        media_pk: int = Form(...),
+                        folder: Optional[Path] = Form(""),
+                        returnFile: Optional[bool] = Form(True),
+                        clients: ClientStorage = Depends(get_clients)):
     """Download IGTV video using media pk
     """
     cl = clients.get(sessionid)
@@ -34,11 +34,11 @@ async def igtv_download(sessionid: str = Form(...),
 
 @router.post("/download/by_url")
 async def igtv_download_by_url(sessionid: str = Form(...),
-                         url: str = Form(...),
-                         filename: Optional[str] = Form(""),
-                         folder: Optional[Path] = Form(""),
-                         returnFile: Optional[bool] = Form(True),
-                         clients: ClientStorage = Depends(get_clients)):
+                               url: str = Form(...),
+                               filename: Optional[str] = Form(""),
+                               folder: Optional[Path] = Form(""),
+                               returnFile: Optional[bool] = Form(True),
+                               clients: ClientStorage = Depends(get_clients)):
     """Download IGTV video using URL
     """
     cl = clients.get(sessionid)
@@ -51,23 +51,27 @@ async def igtv_download_by_url(sessionid: str = Form(...),
 
 @router.post("/upload", response_model=Media)
 async def igtv_upload(sessionid: str = Form(...),
-                       file: UploadFile = File(...),
-                       title: str = Form(...),
-                       caption: str = Form(...),
-                       thumbnail: Optional[UploadFile] = File(None),
-                       usertags: Optional[List[str]] = Form([]),
-                       location: Optional[Location] = Form(None),
-                       clients: ClientStorage = Depends(get_clients)
-                       ) -> Media:
+                      file: UploadFile = File(...),
+                      title: str = Form(...),
+                      caption: str = Form(...),
+                      thumbnail: Optional[UploadFile] = File(None),
+                      usertags: Optional[List[str]] = Form([]),
+                      location: Optional[Location] = Form(None),
+                      clients: ClientStorage = Depends(get_clients)
+                      ) -> Media:
     """Upload photo and configure to feed
     """
     cl = clients.get(sessionid)
-    
+
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-        
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     content = await file.read()
     if thumbnail is not None:
         thumb = await thumbnail.read()
@@ -82,26 +86,31 @@ async def igtv_upload(sessionid: str = Form(...),
         caption=caption,
         usertags=usernames_tags,
         location=location)
-    
+
+
 @router.post("/upload/by_url", response_model=Media)
-async def igtv_upload(sessionid: str = Form(...),
-                       url: str = Form(...),
-                       title: str = Form(...),
-                       caption: str = Form(...),
-                       thumbnail: Optional[UploadFile] = File(None),
-                       usertags: Optional[List[str]] = Form([]),
-                       location: Optional[Location] = Form(None),
-                       clients: ClientStorage = Depends(get_clients)
-                       ) -> Media:
+async def igtv_upload_by_url(sessionid: str = Form(...),
+                             url: str = Form(...),
+                             title: str = Form(...),
+                             caption: str = Form(...),
+                             thumbnail: Optional[UploadFile] = File(None),
+                             usertags: Optional[List[str]] = Form([]),
+                             location: Optional[Location] = Form(None),
+                             clients: ClientStorage = Depends(get_clients)
+                             ) -> Media:
     """Upload photo by URL and configure to feed
     """
     cl = clients.get(sessionid)
-    
+
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-    
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     content = requests.get(url).content
     if thumbnail is not None:
         thumb = await thumbnail.read()

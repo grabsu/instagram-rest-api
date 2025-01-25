@@ -30,9 +30,9 @@ async def album_download(sessionid: str = Form(...),
 
 @router.post("/download/by_urls", response_model=List[Path])
 async def album_download_by_urls(sessionid: str = Form(...),
-                         urls: List[str] = Form(...),
-                         folder: Optional[Path] = Form(""),
-                         clients: ClientStorage = Depends(get_clients)) -> List[Path]:
+                                 urls: List[str] = Form(...),
+                                 folder: Optional[Path] = Form(""),
+                                 clients: ClientStorage = Depends(get_clients)) -> List[Path]:
     """Download photo using URL
     """
     cl = clients.get(sessionid)
@@ -51,12 +51,16 @@ async def album_upload(sessionid: str = Form(...),
     """Upload album to feed
     """
     cl = clients.get(sessionid)
-    
+
     usernames_tags = []
     for usertag in usertags:
         usertag_json = json.loads(usertag)
-        usernames_tags.append(Usertag(user=usertag_json['user'], x=usertag_json['x'], y=usertag_json['y']))
-        
+        usernames_tags.append(
+            Usertag(
+                user=usertag_json['user'],
+                x=usertag_json['x'],
+                y=usertag_json['y']))
+
     return await album_upload_post(
         cl, files, caption=caption,
         usertags=usernames_tags,

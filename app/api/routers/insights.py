@@ -24,7 +24,8 @@ async def media_feed_all(sessionid: str = Form(...),
     """Return medias with insights
     """
     cl = clients.get(sessionid)
-    return cl.insights_media_feed_all(post_type, time_frame, data_ordering, count, sleep=2)
+    return cl.insights_media_feed_all(
+        post_type, time_frame, data_ordering, count, sleep=2)
 
 
 @router.post("/account", response_model=Dict)

@@ -17,10 +17,10 @@ router = APIRouter(
 
 
 @router.post("/user_stories", response_model=List[Story])
-async def story_user_stories(sessionid: str = Form(...), 
-                            user_id: str = Form(...), 
-                            amount: Optional[int] = Form(None), 
-                            clients: ClientStorage = Depends(get_clients)) -> List[Story]:
+async def story_user_stories(sessionid: str = Form(...),
+                             user_id: str = Form(...),
+                             amount: Optional[int] = Form(None),
+                             clients: ClientStorage = Depends(get_clients)) -> List[Story]:
     """Get a user's stories
     """
     cl = clients.get(sessionid)
@@ -28,9 +28,9 @@ async def story_user_stories(sessionid: str = Form(...),
 
 
 @router.post("/info", response_model=Story)
-async def story_info(sessionid: str = Form(...), 
-                     story_pk: int = Form(...), 
-                     use_cache: Optional[bool] = Form(True), 
+async def story_info(sessionid: str = Form(...),
+                     story_pk: int = Form(...),
+                     use_cache: Optional[bool] = Form(True),
                      clients: ClientStorage = Depends(get_clients)) -> Story:
     """Get Story by pk or id
     """
@@ -39,8 +39,8 @@ async def story_info(sessionid: str = Form(...),
 
 
 @router.post("/delete", response_model=bool)
-async def story_delete(sessionid: str = Form(...), 
-                       story_pk: int = Form(...), 
+async def story_delete(sessionid: str = Form(...),
+                       story_pk: int = Form(...),
                        clients: ClientStorage = Depends(get_clients)) -> bool:
     """Delete story
     """
@@ -58,6 +58,7 @@ async def story_seen(sessionid: str = Form(...),
     cl = clients.get(sessionid)
     return cl.story_seen(story_pks, skipped_story_pks)
 
+
 @router.post("/like", response_model=bool)
 async def story_like(sessionid: str = Form(...),
                      story_id: str = Form(...),
@@ -68,14 +69,15 @@ async def story_like(sessionid: str = Form(...),
     cl = clients.get(sessionid)
     return cl.story_like(story_id, revert)
 
+
 @router.post("/unlike", response_model=bool)
 async def story_unlike(sessionid: str = Form(...),
-                     story_id: str = Form(...),
-                     clients: ClientStorage = Depends(get_clients)) -> bool:
+                       story_id: str = Form(...),
+                       clients: ClientStorage = Depends(get_clients)) -> bool:
     """Unlike a Story
     """
     cl = clients.get(sessionid)
-    return cl.story_unlike(story_pks)
+    return cl.story_unlike(story_id)
 
 
 @router.get("/pk_from_url")
